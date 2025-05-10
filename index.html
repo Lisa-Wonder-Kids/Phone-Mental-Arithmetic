@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,85 +14,129 @@
       background: white;
       font-family: Arial, sans-serif;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
+
+    #secondPage {
+      display: none;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    button {
+  background-color: #007BFF;     /* Soft blue */
+  color: white;                  /* White text */
+  border: none;                  /* No border */
+  padding: 10px 20px;            /* Space inside */
+  border-radius: 5px;            /* Rounded corners */
+  font-size: 16px;               /* Clear text */
+  cursor: pointer;               /* Pointer on hover */
+  transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+button:hover {
+  background-color: #0056b3;     /* Darker blue on hover */
+}
+
+button:active {
+  background-color: #004080;     /* Pressed effect */
+}
+
+label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+input[type="number"] {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input[type="number"]:focus {
+  border-color: #007BFF;
+}
+
 
     #number, #answer {
       text-align: center;
-      width: 100%;
+      width: 90%;
+      font-weight: bold;
+      line-height: 1;
     }
 
-    /* Default font size for larger screens */
+    /* Large font size for main numbers and answers */
     #number {
-      font-size: 35vw;
-      font-weight: bold;
-      margin-top: 18vh;
+      font-size: 45vh;
     }
 
     #answer {
-     font-size: 35vw; /* Increased from 10vw to 14vw */
-     font-weight: bold;
-     color: red;
-     position: relative;
-     top: -10px;  /* Move up */
-     display: none;
+      font-size: 45vh;
+      color: red;
+      display: none;
+      position: relative;
+      top: -10px;
     }
 
-    /* Controls at the top */
+    /* Controls */
     .controls {
-      position: absolute;
-      top: 20px;
-      left: 0;
-      right: 0;
-      text-align: center;
-    }
-
-    button, input {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
       padding: 10px 20px;
-      margin: 5px;
-      font-size: 18px;
+      z-index: 10;
     }
 
-    /* Media Queries for Mobile Devices */
-    @media (max-width: 600px) {
-      #number {
-        font-size: 40vw;  /* Large font size for mobile */
-      }
-
-      #answer {
-        font-size: 20vw;  /* Larger font size for answer on mobile */
-      }
+    .button-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
+    /* Mobile optimizations */
     @media (max-width: 400px) {
       #number {
-        font-size: 55vw;  /* Even larger font size for very small screens */
+        font-size: 40vh;
       }
 
       #answer {
-        font-size: 30vw;  /* Even larger answer font size for very small screens */
+        font-size: 40vh;
       }
-     #logo {
-       bottom: 10px;
-       left: 10px;
-       width: 120px;     /* Or use %, like width: 20%; */
-       height: 20px;     /* Maintain aspect ratio */
-       z-index: 1000;
-         
+    }
 
-}
+    @media (max-width: 300px) {
+      #number {
+        font-size: 40vh;
+      }
+
+      #answer {
+        font-size: 40vh;
+      }
     }
   </style>
 </head>
 <body>
-   <!-- Page 1: Settings before starting the game -->
+  <!-- Logo at the top, visible on all pages -->
+
+  <div style="display: flex; justify-content: center; padding: 10px;">
+  <img src="nada.png" alt="Logo" id="logo">
+</div>
+   
+  <!-- Page 1: Settings before starting the game -->
   <div id="firstPage" class="controls">
-    <label>Speed (sec):</label>
+    <label>Speed:</label>
     <input type="number" id="speedInput" value="1.0" min="0.3" max="5.0" step="0.1">
-    <label>Numbers per set:</label>
+    <label>Numbers/set:</label>
     <input type="number" id="countInput" value="5" min="1" max="20">
     <button id="toggleButton">START</button>
-
-    <img src="nada.jpg" alt="Logo" id="logo">
   </div>
 
   <!-- Page 2: Game display area -->
@@ -102,9 +147,8 @@
       <button id="nextButton">Next Set</button>
       <button id="returnButton">Back</button>
       <button id="showAnswerButton" style="display: none;">Show Answer</button>
-       <img src="nada.jpg" alt="Logo" id="logo">
     </div>
-     </div>
+  </div>
 
   <script>
     function generateRandomSets(numSets = 30, numbersPerSet = 9) {
@@ -175,33 +219,29 @@
       } else {
         clearInterval(countdownInterval);
 
-        // Instead of showing '...', show the sum of the numbers
-       // const sum = currentSet.slice(0, numbersToShow).reduce((a, b) => a + b, 0);
-        //numberDisplay.textContent = `Answer: ${sum}`;
-
         waitingForEnter = true;
         document.getElementById('showAnswerButton').style.display = 'inline-block';
       }
     }
 
     function showAnswer() {
-  const numberDisplay = document.getElementById('number');
-  const answerDisplay = document.getElementById('answer');
-  const currentSet = sets[currentSetIndex];
+      const numberDisplay = document.getElementById('number');
+      const answerDisplay = document.getElementById('answer');
+      const currentSet = sets[currentSetIndex];
 
-  // Hide the last number
-  numberDisplay.textContent = '';
+      // Hide the last number
+      numberDisplay.textContent = '';
 
-  // Calculate and show the answer
-  const sum = currentSet.slice(0, numbersToShow).reduce((a, b) => a + b, 0);
-  answerDisplay.textContent = `= ${sum}`;
-  answerDisplay.style.display = 'block';
+      // Calculate and show the answer
+      const sum = currentSet.slice(0, numbersToShow).reduce((a, b) => a + b, 0);
+      answerDisplay.textContent = `${sum}`;
+      answerDisplay.style.display = 'block';
 
-  // Hide the "Show Answer" button
-  document.getElementById('showAnswerButton').style.display = 'none';
+      // Hide the "Show Answer" button
+      document.getElementById('showAnswerButton').style.display = 'none';
 
-  waitingForEnter = false;
-}
+      waitingForEnter = false;
+    }
 
     function switchPage() {
       const firstPage = document.getElementById('firstPage');
